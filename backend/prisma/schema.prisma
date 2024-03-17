@@ -38,3 +38,8 @@ model Answer {
   No_of_Post Int
 }
 
+model User{
+  email String @unique
+  password String
+}
+
