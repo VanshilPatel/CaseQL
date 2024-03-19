@@ -1,59 +1,138 @@
 const express = require('express');
+var cookie = require('cookie');
 
-const bcrypt = require('bcrypt'); 
-const jwt = require('jsonwebtoken'); 
-const { PrismaClient } = require('@prisma/client'); 
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient(); 
+const prisma = new PrismaClient();
 
 
-const JWT_SECRET = process.env.JWT_SECRET; 
-const SALT_ROUNDS = 10; 
+const JWT_SECRET = process.env.JWT_SECRET;
+const SALT_ROUNDS = 10;
 
 
 app.post('/signup', async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
 
-   // basic input validation check
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Missing required fields' });
+        // basic input validation check
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        const existingUser = await prisma.user.findUnique({
+            where: { email },
+        });
+
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email already exists' });
+        }
+
+
+        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
+        const newUser = await prisma.user.create({
+            data: {
+                email,
+                password: hashedPassword,
+            },
+        });
+
+        // Generate a JWT token 
+        const jwtToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' }); // Set appropriate expiration time
+        const refreshToken = jwt.sign({email}, JWT_SECRET, {expiresIn : '7d'});
+
+        res.status(201).json({
+            jwtToken,
+            refreshToken,
+            message: 'Signup successful',
+        });
+
+        sessionStorage.setItem('jwtToken', jwtToken);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
     }
-
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email already exists' });
-    }
-
-    
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-
-    const newUser = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-      },
-    });
-
-    // Generate a secure JWT token 
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
-
-    res.status(201).json({
-      token,
-      message: 'Signup successful',
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
 });
 
 
 
+app.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        const user = await prisma.user.findUnique({
+            where: { email },
+        })
+
+        if (!user) {
+            res.status(404).json({ message: "User not found" })
+        }
+
+
+        const isValidPassword = await bcrypt.compare(password, user.password);
+
+        if (!isValidPassword) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        const jwtToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' }); // Set appropriate expiration time
+        const refreshToken = jwt.sign({email}, JWT_SECRET, {expiresIn : '7d'});
+
+        res.status(201).json({
+            jwtToken,
+            refreshToken,
+            message: 'Login successful',
+        });
+
+        sessionStorage.setItem('jwtToken', jwtToken);
+
+        res.cookie('refreshToken', refreshToken, {
+            secure: true, // Set to true if using HTTPS
+            httpOnly: true,
+            sameSite: 'strict', // Adjust to your requirements
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+          });
+
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+})
+
+app.post('/refresh', async (req, res) => {
+    try {
+      const { refreshToken } = req.cookies;
+  
+      if (!refreshToken) {
+        return res.status(401).json({ error: 'Refresh token not found' });
+      }
+  
+      jwt.verify(refreshToken, JWT_SECRET, (err, decoded) => {
+        if (err) {
+          
+          if (err.name === 'TokenExpiredError') {
+            return res.status(401).json({ error: 'Refresh token expired' });
+          }
+          return res.status(401).json({ error: 'Invalid refresh token' });
+        }
+
+       
+        const newJwtToken = jwt.sign({email}, JWT_SECRET, { expiresIn: '1h' });
+  
+        res.json({ jwtToken: newJwtToken });
+      });
+    } catch (error) {
+      console.error(error)
+    }
+  });
 
 
 
@@ -70,7 +149,7 @@ app.post('/signup', async (req, res, next) => {
 
 // main()
 //   .catch((e) => console.error(e))
-  
+
 
 // async function generate_answer_table(){
 //     const new_answer = await Promise.all([
@@ -125,7 +204,7 @@ app.post('/signup', async (req, res, next) => {
 //           }
 //         })
 //       ]);
-      
+
 // }
 
 
@@ -134,6 +213,6 @@ app.post('/signup', async (req, res, next) => {
 //   .finally(async () => await prisma.$disconnect())
 
 
-app.listen(5342, ()=>{
+app.listen(5342, () => {
     console.log("App listening on port 5342");
 })
