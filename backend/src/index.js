@@ -94,9 +94,9 @@ app.post("/login", async (req, res) => {
         sessionStorage.setItem('jwtToken', jwtToken);
 
         res.cookie('refreshToken', refreshToken, {
-            secure: true, // Set to true if using HTTPS
+            secure: true, 
             httpOnly: true,
-            sameSite: 'strict', // Adjust to your requirements
+            sameSite: 'strict', 
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
 
@@ -115,7 +115,7 @@ app.post('/refresh', async (req, res) => {
         return res.status(401).json({ error: 'Refresh token not found' });
       }
   
-      jwt.verify(refreshToken, JWT_SECRET, (err, decoded) => {
+      jwt.verify(refreshToken, JWT_SECRET, (err) => {
         if (err) {
           
           if (err.name === 'TokenExpiredError') {
@@ -135,6 +135,9 @@ app.post('/refresh', async (req, res) => {
   });
 
 
+  app.post("/query", async (req,res)=>{
+
+  })
 
 // async function main(){
 //   const new_Case = await prisma.case.create({
