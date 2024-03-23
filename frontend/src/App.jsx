@@ -16,13 +16,14 @@ function App() {
     
     <BrowserRouter>
     <Navbar/>
-    <Routes>
-      <Route path='/' element={<Home/>}></Route>
-      <Route path='/brief' element={<Brief />}></Route>
-      <Route path='/query' element={<Query/>}></Route>
-      <Route path='/results' element={<Results/>}></Route>
-     
-    </Routes>
+    <div className="flex flex-col min-h-screen">
+          <Routes>
+            <Route path='/home' element={<Home className="h-screen pt-20" />} />
+            <Route path='/brief' element={<Brief />} />
+            <Route path='/query' element={<Query />} />
+            <Route path='/results' element={<Results />} />
+          </Routes>
+        </div>
    
     </BrowserRouter>
     </div>
