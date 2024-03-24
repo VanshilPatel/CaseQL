@@ -3,6 +3,10 @@ import React, { useState } from 'react';
 
 
 const Query = () => {
+  const symbols = ["*", ">", "<", "=", "!=", "NOT", "AND", "OR", "DISTINCT", "LIMIT", "IN"];
+  const keywords = ["SELECT", "WHERE", "FROM", "GROUP", "BY"];
+  const keywords2 = ["FirstName", "LastName", "EmailAdd", "Posts", "LastAccess"];  
+
   const [value, setValue] = useState(' ');
 
   const handleClick = (buttonName) => {
@@ -38,43 +42,35 @@ const Query = () => {
 
       <div className='flex space-x-8 items-center'>
         <div className='flex flex-col w-1/12 justify-end ml-96 mt-3'>
-          <button
-            name='SELECT'
+            {keywords.map(keyword => <button
+            name={keyword}
             className='bg-slate-950 text-gray-50 border rounded-md p-3'
-            onClick={() => handleClick('SELECT')}
+            onClick={() => handleClick(keyword)}
           >
-            SELECT
-          </button>
-          <button
-            name='WHERE'
-            className='bg-slate-950 text-gray-50 border rounded-md p-3'
-            onClick={() => handleClick('WHERE')}
-          >
-            WHERE
-          </button>
-          <button
-            name='FROM'
-            className='bg-slate-950 text-gray-50 border rounded-md p-3'
-            onClick={() => handleClick('FROM')}
-          >
-            FROM
-          </button>
-          <button
-            name='GROUP'
-            className='bg-slate-950 text-gray-50 border rounded-md p-3'
-            onClick={() => handleClick('GROUP')}
-          >
-            GROUP
-          </button>
-          <button
-            name='BY'
-            className='bg-slate-950 text-gray-50 border rounded-md p-3'
-            onClick={() => handleClick('BY')}
-          >
-            BY
-          </button>
+          { keyword}
+          </button>)}     
         </div>
-        <p className='max-w-[500px] font-semibold'>All illegal site's servers were seized in a recent operation. Please submit all the users' details</p>
+
+        <div className='flex flex-col w-1/12 justify-end ml-96 mt-3'>
+        {keywords2.map(keyword => <button
+            name={keyword}
+            className='bg-slate-950 text-gray-50 border rounded-md p-3'
+            onClick={() => handleClick(keyword)}
+          >
+          { keyword}
+          </button>)}  
+        </div>
+
+
+        <div className='flex flex-col w-[400px]'>
+        <p className='max-w-[400px] font-semibold'>All illegal site's servers were seized in a recent operation. Please submit all the users' details</p>
+        <div className='mt-7 flex flex-wrap space-x-4 my-2'>
+        {symbols.map(symbol => <buttton 
+        name={symbol} 
+        onClick={() => handleClick(symbol)}
+        className="bg-slate-950 text-gray-50 border rounded-md p-3 my-3">{symbol}</buttton>)}
+        </div>
+        </div>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { Axis3DIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +9,8 @@ function Signup() {
 
     const handleSignup = () => {
       
-
+        
+   
 
         navigate('/login')
     };
