@@ -5,6 +5,9 @@ import Navbar from './components/Navbar'
 import Brief from './components/Brief'
 import Query from './components/Query'
 import Results from './components/Results'
+import Signup from './components/Signup'
+import Login from './components/Login'
+
 
 
 
@@ -18,6 +21,9 @@ function App() {
     <Navbar/>
     <div className="flex flex-col min-h-screen">
           <Routes>
+            
+            <Route path='/signup' element={<Signup/>} />
+            <Route path='/login' element={<Login/>} />
             <Route path='/' element={<Home className="h-screen pt-20" />} />
             <Route path='/brief' element={<Brief />} />
             <Route path='/query' element={<Query />} />
