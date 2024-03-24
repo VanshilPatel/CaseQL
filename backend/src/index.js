@@ -3,7 +3,8 @@ var cookie = require('cookie');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
-const authMiddleware = require('./authMiddleware');
+const authMiddleware = require('../middlewares/authMiddleware');
+const checkRequiredFields = require('../middlewares/checkRequiredFields')
 const JWT_SECRET = process.env.JWT_SECRET;
 const SALT_ROUNDS = 10;
 
@@ -14,14 +15,9 @@ const prisma = new PrismaClient();
 
 app.use(express.json());
 
-app.post('/signup', async (req, res, next) => {
+app.post('/signup', checkRequiredFields ,async (req, res, next) => {
     try {
         const { email, password } = req.body;
-
-        // basic input validation check
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Missing required fields' });
-        }
 
         const existingUser = await prisma.user.findUnique({
             where: { email },
@@ -30,7 +26,6 @@ app.post('/signup', async (req, res, next) => {
         if (existingUser) {
             return res.status(400).json({ message: 'Email already exists' });
         }
-
 
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
@@ -61,13 +56,9 @@ app.post('/signup', async (req, res, next) => {
 
 
 
-app.post("/login", async (req, res) => {
+app.post("/login",checkRequiredFields ,async (req, res) => {
     try {
         const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Missing required fields' });
-        }
 
         const user = await prisma.user.findUnique({
             where: { email },
