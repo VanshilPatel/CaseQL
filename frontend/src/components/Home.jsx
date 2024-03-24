@@ -1,8 +1,17 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+
+
+   const navigate = useNavigate();
+   
+   const handleClick = ()=>{
+    navigate('/brief')
+   }
+
+
   return (
-    
     <div className="space-y-4 text-center mt-36">
             <h1 className="text-7xl font-bold text-blue-400 ">
               Practice SQL with CaseQL
@@ -13,7 +22,7 @@ const Home = () => {
 
             <div className='space-x-7 space-y-4'>
                 <button className='border rounded-md bg-slate-50 text-gray-900 p-3'>Sign Up</button>
-                <button className='border rounded-md bg-gray-700 text-gray-50 p-3'>Try a few cases</button>
+                <button className='border rounded-md bg-gray-700 text-gray-50 p-3' onClick={handleClick}>Try a few cases</button>
             </div>
 
     </div>
