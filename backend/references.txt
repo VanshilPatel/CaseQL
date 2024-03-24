@@ -1,3 +1,7 @@
 
 Token storage in cookies and other security measures and their solution
 http://www.cyberchief.ai/2023/05/secure-jwt-token-storage.html
+
+
+Input field with state variable and onChange event : 
+https://react.dev/reference/react-dom/components/input#controlling-an-input-with-a-state-variable 

@@ -1,16 +1,18 @@
 const express = require('express');
 var cookie = require('cookie');
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
-
-
+const authMiddleware = require('./authMiddleware');
 const JWT_SECRET = process.env.JWT_SECRET;
 const SALT_ROUNDS = 10;
 
+
+const app = express();
+const prisma = new PrismaClient();
+
+
+app.use(express.json());
 
 app.post('/signup', async (req, res, next) => {
     try {
@@ -107,7 +109,7 @@ app.post("/login", async (req, res) => {
     }
 })
 
-app.post('/refresh', async (req, res) => {
+app.post('/refresh',authMiddleware,  async (req, res) => {
     try {
       const { refreshToken } = req.cookies;
   
