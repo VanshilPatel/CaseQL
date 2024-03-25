@@ -10,6 +10,10 @@ const Home = () => {
     navigate('/brief')
    }
 
+   const handleSignUp = ()=>{
+    navigate('/signup')
+   }
+
 
   return (
     <div className="space-y-4 text-center mt-36">
@@ -21,7 +25,7 @@ const Home = () => {
             </p>
 
             <div className='space-x-7 space-y-4'>
-                <button className='border rounded-md bg-slate-50 text-gray-900 p-3'>Sign Up</button>
+                <button className='border rounded-md bg-slate-50 text-gray-900 p-3' onClick={handleSignUp}>Sign Up</button>
                 <button className='border rounded-md bg-gray-700 text-gray-50 p-3' onClick={handleClick}>Try a few cases</button>
             </div>
 

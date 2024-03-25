@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 const Query = () => {
   const symbols = ["*", ">", "<", "=", "!=", "NOT", "AND", "OR", "DISTINCT", "LIMIT", "IN"];
   const keywords = ["SELECT", "WHERE", "FROM", "GROUP", "BY"];
-  const keywords2 = ["FirstName", "LastName", "EmailAdd", "Posts", "LastAccess"];  
+  const keywords2 = ["firstName", "lastName", "emailAdd", "posts", "lastAccess"];  
 
   const [value, setValue] = useState(' ');
 

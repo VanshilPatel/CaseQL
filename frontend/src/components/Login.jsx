@@ -1,12 +1,39 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
-    const handleLogin = () => {
-      
-    };
+    
+  var data = JSON.stringify({
+    email,
+    password,
+  });
+
+  var config = {
+    method: "post",
+    url: 'http://localhost:5342/login',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: data,
+  }
+
+  const handleLogin = () => {
+    axios(config)
+      .then(function (response) {
+        const { jwtToken } = response.data; 
+        sessionStorage.setItem("jwtToken", jwtToken);
+        console.log(JSON.stringify(response.data));
+        navigate("/brief");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-slate-gray-950 text-slate-gray-50">
