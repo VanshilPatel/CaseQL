@@ -15,11 +15,11 @@ datasource db {
 
 
 
-model Case{
+model cases{
   id Int @id @default(autoincrement())
   description String
   answer String  // contains the actual sql string expected from the user
-  answers     Answer[]  //just added for the referential purpose (foreing key in answer table)
+  users     users[]  //just added for the referential purpose (foreign key in answer table)
   
 
 }
@@ -27,18 +27,19 @@ model Case{
  //this is the hard coded table consisting of few rows for a particular case , 
  // if true query then we will send the table to the user
  // in the output else not 
-model Answer {
+model users {
   id       Int    @id @default(autoincrement())
   caseId   Int
-  case     Case   @relation(fields: [caseId], references: [id])
-  f_name String
-  l_name String
-  email String
-  Access_Time DateTime
-  No_of_Post Int
+  case     cases   @relation(fields: [caseId], references: [id])
+  firstName String
+  lastName String
+  emailAdd String
+  lastAccess DateTime
+  posts Int
+
 }
 
-model User{
+model members{
   email String @unique
   password String
 }
