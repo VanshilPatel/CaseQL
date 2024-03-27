@@ -1,7 +1,12 @@
 import React from 'react';
 
+import acceptedAnimationData from '../assets/accepted.json';
+import Animation from './Animation'; // Import the JSON file for the accepted animation
+
+
 const Results = () => {
-  
+
+
   const usersData = [
     {
         caseId: 3,
@@ -64,6 +69,9 @@ const Results = () => {
   return (
     <div className="bg-gray-950 text-gray-50 p-4">
       <h2 className="text-2xl mb-4">Results</h2>
+    
+    <Animation animationData={acceptedAnimationData} />
+     
       <div className="overflow-x-auto">
         <table className="table-auto border-collapse border border-gray-600 w-full">
           <thead>

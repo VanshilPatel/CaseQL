@@ -1,7 +1,9 @@
 import { Delete } from 'lucide-react';
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
+import rejectedAnimationData from '../assets/reject.json'
+import Animation from './Animation'; 
 
 
 const Query = () => {
@@ -13,6 +15,7 @@ const Query = () => {
   const [value, setValue] = useState(' ');
   const [brief, setBrief] = useState();
   const navigate = useNavigate();
+  const [rejected, setRejected] = useState(false);
 
   const requestBody = {
     id: id.toString(), 
@@ -23,11 +26,13 @@ const Query = () => {
 
     axios.post('http://localhost:5342/query', requestBody)
       .then(function (response) {
-
         if(response.data.message == "success"){
           navigate('/results')
         }
-        navigate('/results')
+        else{
+          setRejected(true);
+        }
+       
         console.log(response.data);
       })
       .catch(function (error) {
@@ -69,6 +74,7 @@ const Query = () => {
 
   return (
     <div className='flex flex-col'>
+       {rejected && <Animation animationData={rejectedAnimationData} /> }
       <div className='flex items-center'>
         <input
           type='text'
@@ -76,6 +82,7 @@ const Query = () => {
           readOnly
           value={value ?? ' '}   //value should be always string, can;t happen like prev it can be undefined or null and afterwards string come
         />
+
       </div>
 
       <div className='flex mt-3 ml-96 space-x-3'>
