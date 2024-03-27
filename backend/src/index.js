@@ -119,7 +119,41 @@ app.post("/refresh", authMiddleware, async (req, res) => {
   }
 });
 
-//app.post("/query", async (req, res) => {});
+
+app.get("/brief/:id", async(req,res)=>{
+    const id = parseInt(req.params.id);
+
+    const question = await prisma.cases.findUnique({
+        where : { id : id },
+    })
+
+    if(!question){
+        res.status(404).json({message : "Brief not found"})
+    }
+
+    res.json(question).status(200);
+})
+
+
+
+app.post("/query", async (req,res)=>{
+    const value = req.body.value.replace(/\s+/g, '');
+    const id = parseInt(req.body.id)
+    
+    const question = await prisma.cases.findUnique({
+        where : { id : id },
+    })
+    const answer = question.answer.replace(/\s+/g, '');
+
+    if(answer == value){
+        res.json({message : 'success'})
+    }
+    else{
+        res.json({message : "Wrong answer"});
+    }
+
+    
+})
 
 
 
