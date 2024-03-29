@@ -17,7 +17,7 @@ const Home = () => {
 
   return (
     <div className="space-y-4 text-center mt-36">
-            <h1 className="text-7xl font-bold text-blue-400 ">
+            <h1 className="text-7xl font-geist font-bold text-blue-400 ">
               Practice SQL with CaseQL
             </h1>
             <p className="mx-auto max-w-[600px] text-gray-50 text-2xl gap-3">
